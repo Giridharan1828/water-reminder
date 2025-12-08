@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hydrate 💗</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #FFD6E8, #E6D8FF);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #6c4c7b;
+    }
+
+    .card {
+      background: white;
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .drop-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: auto;
+      display: block;
+      animation: float 3s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      margin-top: 10px;
+      color: #d86bb9;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    p {
+      color: #7a5c89;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 15px 25px;
+      background: linear-gradient(90deg, #FFA8D6, #C5A6FF);
+      border: none;
+      color: white;
+      border-radius: 20px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.25s;
+      font-weight: 600;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 160, 210, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <!-- Replaced div.drop with img.drop-img -->
+    <img src="icons/drop.png" alt="Cute drop" class="drop-img" />
+
+    <h1>Stay Hydrated, Love 💗</h1>
+    <p id="msg">Click the button so I can remind you gently every hour 💞</p>
+
+    <button onclick="enableReminders()">Enable Cute Reminders 💧</button>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    async function enableReminders() {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert('Please allow notification permission 💗');
+        return;
+      }
+
+      const reg = await navigator.serviceWorker.ready;
+
+      if ('periodicSync' in reg) {
+        try {
+          await reg.periodicSync.register('water-reminder', {
+            minInterval: 90 * 60 * 1000
+          });
+
+          document.getElementById('msg').innerText =
+            'Yay! I’ll remind you every hour, my love 💖💦';
+        } catch (e) {
+          alert('Please enable Background Sync in Chrome settings 💗');
+        }
+      } else {
+        alert('Your phone doesn’t support periodic sync 😢');
+      }
+    }
+  </script>
+</body>
+</html>
+    
