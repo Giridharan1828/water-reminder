@@ -30,14 +30,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .drop-img {
@@ -51,15 +45,9 @@
     }
 
     @keyframes float {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-12px);
-      }
-      100% {
-        transform: translateY(0);
-      }
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0); }
     }
 
     h1 {
@@ -96,7 +84,6 @@
 
 <body>
   <div class="card">
-    <!-- Replaced div.drop with img.drop-img -->
     <img src="icons/drop.png" alt="Cute drop" class="drop-img" />
 
     <h1>Stay Hydrated, Love 💗</h1>
@@ -117,24 +104,10 @@
         return;
       }
 
-      const reg = await navigator.serviceWorker.ready;
-
-      if ('periodicSync' in reg) {
-        try {
-          await reg.periodicSync.register('water-reminder', {
-            minInterval: 90 * 60 * 1000
-          });
-
-          document.getElementById('msg').innerText =
-            'Yay! I’ll remind you every hour, my love 💖💦';
-        } catch (e) {
-          alert('Please enable Background Sync in Chrome settings 💗');
-        }
-      } else {
-        alert('Your phone doesn’t support periodic sync 😢');
-      }
+      // No periodicSync — service worker handles notifications automatically
+      document.getElementById('msg').innerText =
+        'Yay! I’ll remind you every hour, my love 💖💦';
     }
   </script>
 </body>
 </html>
-    

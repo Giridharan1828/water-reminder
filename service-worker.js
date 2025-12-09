@@ -1,7 +1,28 @@
-self.addEventListener("periodicsync", (event) => {
-  if (event.tag === "water-reminder") {
+// Activate immediately
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
 
-    const messages = [
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+
+  // Create hourly repeating alarm
+  if (typeof chrome !== "undefined" && chrome.alarms) {
+    chrome.alarms.create("waterReminder", { periodInMinutes: 60 });
+  }
+});
+
+// Listen for alarm trigger
+if (typeof chrome !== "undefined" && chrome.alarms) {
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === "waterReminder") {
+      sendHydrationNotification();
+    }
+  });
+}
+
+function sendHydrationNotification() {
+  const messages = [
       "Hi Akshuuu 💗 thanni kudichiyaa illa 🥺?",
       "Hydration time jii, pleachh drink water 💞",
       "A gentle reminder for drinking water angel 💧",
@@ -47,15 +68,14 @@ self.addEventListener("periodicsync", (event) => {
       "Hydration queen entry loading… after one sip 💖",
       "Oru tiny sip for body, one big smile for me 😘💗",
       "Stay soft, stay sweet, stay hydrated always angel 💧💞"
-    ];
+  ];
 
-    const msg = messages[Math.floor(Math.random() * messages.length)];
+  const msg = messages[Math.floor(Math.random() * messages.length)];
 
-    event.waitUntil(
-      self.registration.showNotification("💧 Hydration Reminder 💗", {
-        body: msg,
-        icon: "/icons/water.png"
-      })
-    );
-  }
-});
+  self.registration.showNotification("💧 Hydration Reminder 💗", {
+    body: msg,
+    icon: "/icons/water.png",
+    badge: "/icons/water.png",
+    vibrate: [200, 100, 200]
+  });
+}

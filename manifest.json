@@ -5,6 +5,7 @@
   "display": "standalone",
   "background_color": "#FFD6E8",
   "theme_color": "#FF9ECF",
+  "permissions": ["notifications", "alarms"],
   "icons": [
     {
       "src": "icons/water.png",
