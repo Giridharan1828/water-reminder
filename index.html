@@ -17,7 +17,6 @@
       align-items: center;
       color: #6c4c7b;
     }
-
     .card {
       background: white;
       width: 90%;
@@ -28,12 +27,10 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       animation: fadeIn 1.2s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .drop-img {
       width: 80px;
       height: 80px;
@@ -43,25 +40,13 @@
       display: block;
       animation: float 3s infinite ease-in-out;
     }
-
     @keyframes float {
       0% { transform: translateY(0); }
       50% { transform: translateY(-12px); }
       100% { transform: translateY(0); }
     }
-
-    h1 {
-      margin-top: 10px;
-      color: #d86bb9;
-      font-size: 26px;
-      font-weight: 700;
-    }
-
-    p {
-      color: #7a5c89;
-      font-size: 16px;
-    }
-
+    h1 { margin-top: 10px; color: #d86bb9; font-size: 26px; font-weight: 700; }
+    p { color: #7a5c89; font-size: 16px; }
     button {
       margin-top: 20px;
       padding: 15px 25px;
@@ -74,39 +59,112 @@
       transition: 0.25s;
       font-weight: 600;
     }
-
     button:hover {
       transform: scale(1.05);
       box-shadow: 0 8px 20px rgba(255, 160, 210, 0.4);
     }
   </style>
 </head>
-
 <body>
   <div class="card">
     <img src="icons/drop.png" alt="Cute drop" class="drop-img" />
-
     <h1>Stay Hydrated, Love 💗</h1>
-    <p id="msg">Click the button so I can remind you gently every hour 💞</p>
-
+    <p id="msg">Click the button so I can remind you gently 💞</p>
     <button onclick="enableReminders()">Enable Cute Reminders 💧</button>
+    <button onclick="sendTestNotification()">Send Test Notification 🚀</button>
   </div>
 
   <script>
+    // Check service worker support
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
+      navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker Registered'))
+      .catch(err => console.error('Service Worker registration failed:', err));
     }
 
+    // Preload your cute messages
+    const messages = [
+      "Hi Akshuuu 💗 thanni kudichiyaa illa 🥺?",
+      "Hydration time jii, pleachh drink water 💞",
+      "A gentle reminder for drinking water angel 💧",
+      "Sipyyy sipyyy water sippyyy, pretty girl 💖",
+      "Stay hydrated for yourselves , myself and for the best days ahead🤩💗",
+      "Oii have some water for me na 🥺💗",
+      "Water break jiiii, ipoveyy neer parugu 💧✨",
+      "Beautiful soul need water to stay hydrated always 💖",
+      "Drink a little water,and mover little sharper💗",
+      "Akshu, thanni kudichidu golden peacock 🥺💞",
+      "Small reminder: water is waiting for youuuu 💧💗",
+      "Pretty princess, hydration is important maa 💖",
+      "Please drink water and stay glowy glowyyy ✨💞",
+      "Kutty, oru sip kudichidu vaa 🥺💧",
+      "Angel, sent to H2o goo get him 💗",
+      "Hydration check, neenga thanni kudichingala? 💞",
+      "Cute girl deserves the best—start with water 💙",
+      "Sippy sippy time daa maa💖",
+      "Wanna see you healthy and happy, drink water okay daa maa? 💗💧",
+      "Soft reminder from your biggest fan: DRINK WATER 😘",
+      "Hello sunshine, time to hydrate 🩷💧",
+      "Thanni kudichaa face will glow glow  vaam🤩💗",
+      "Drink water maa, your body loves you 💞",
+      "You're too precious, so no skipping water okay 🥺💗",
+      "Water ta poi ‘I’m back’ nu sollu da maa 😂💧",
+      "Hydration hug from me to youuuu 🤗💗",
+      "Pattu ru sip panna, naan happy 🥺💞",
+      "Pretty girl, your bottle is calling 💧💖",
+      "Break time = water time jii 💗",
+      "Healthy habits start with one sip daa laddoo💞",
+      "Go drink water,my superstar ✨💧",
+      "Dearest Akshu, thanni kudichaa proudest ah irupen 🥹💗",
+      "Hydration goddess mode ON after one sip ?😍💞",
+      "Nalla paadum la enakaaga , apo thanni kudikanum la? 🥺💖",
+      "Take care of yourself , start with water 💧💗",
+      "Thanni kudichaa headache um varadhu daa pattu 💗",
+      "You glow more than the sun… but water helps 😌💞",
+      "Please sippyyy sippyyy water for me 💧💗",
+      "Angel wings need hydration too la muhh💖",
+      "Drink water, or else you will be brutally bitten🥰🥰✨💧",
+      "Pretty soul, stay hydrated always 💗",
+      "Sip water, breathe, smile… repeat 💞",
+      "Hydration queen entry loading… after one sip 💖",
+      "Oru tiny sip for body, one big smile for me 😘💗",
+      "Stay soft, stay sweet, stay hydrated always angel 💧💞"
+    ];
+
+    // Show a random message as notification
+    function showNotification() {
+      if (Notification.permission === 'granted') {
+        const msg = messages[Math.floor(Math.random() * messages.length)];
+        navigator.serviceWorker.ready.then(registration => {
+          registration.showNotification("💧 Hydration Reminder 💗", {
+            body: msg,
+            icon: "/icons/water.png",
+            badge: "/icons/water.png",
+            vibrate: [200, 100, 200]
+          });
+        });
+      }
+    }
+
+    // Enable reminders
     async function enableReminders() {
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
-        alert('Please allow notification permission 💗');
+        alert('Please allow notifications 💗');
         return;
       }
+      document.getElementById('msg').innerText = "Yay! Reminders enabled 💖💦";
 
-      // No periodicSync — service worker handles notifications automatically
-      document.getElementById('msg').innerText =
-        'Yay! I’ll remind you every hour, my love 💖💦';
+      // Send a test notification immediately
+      showNotification();
+
+      // Schedule hourly notifications (every 60 minutes)
+      setInterval(showNotification, 60 * 60 * 1000); // 3600000ms = 1 hour
+    }
+
+    // Manual test notification
+    function sendTestNotification() {
+      showNotification();
     }
   </script>
 </body>
